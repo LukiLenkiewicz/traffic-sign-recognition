@@ -6,8 +6,9 @@ class CNN(nn.Module):
         self.encoder = ConvBlock()
         self.classifier = nn.Linear()
 
-    def forward(self, x):
+    def forward(self, x: torch.Tensor):
         x = self.encoder(x)
+        x = x.flatten()
         x = self.classifier(x)
         return x
 
