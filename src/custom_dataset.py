@@ -17,5 +17,3 @@ class TrafficSignDatset(Dataset):
         image = ToTensor()(image)
         label = sample["label"]
         return image, label
-
-
