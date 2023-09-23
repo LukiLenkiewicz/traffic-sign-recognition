@@ -5,7 +5,7 @@ class CNN(nn.Module):
     def __init__(self):
         super().__init__()
         self.encoder = ConvBlock()
-        self.classifier = nn.Linear(56448, 32)
+        self.classifier = nn.Linear(56448, 43)
 
     def forward(self, x: torch.Tensor):
         x = self.encoder(x)

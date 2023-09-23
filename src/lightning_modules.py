@@ -22,12 +22,20 @@ class CNNModule(pl.LightningModule):
         inputs, target = batch
         output = self.model(inputs)
         loss = self.loss(output, target)
+        self.log("train loss", loss)
+        _, pred = torch.max(output, dim=1)
+        accuracy = torch.sum(pred==target)/len(target)
+        self.log("train accuracy", accuracy.item())
         return loss
     
     def validation_step(self, batch, batch_idx):
         inputs, target = batch
         output = self.model(inputs)
         loss = self.loss(output, target)
+        self.log("test loss", loss)
+        _, pred = torch.max(output, dim=1)
+        accuracy = torch.sum(pred==target)/len(target)
+        self.log("test accuracy", accuracy.item())
         return loss
 
     def configure_optimizers(self):
