@@ -81,5 +81,9 @@ venv.bak/
 #datasets
 data/
 
-#lightning_logs
-lightning_logs
+#logs
+lightning_logs/
+wandb/
+
+#models
+models/
