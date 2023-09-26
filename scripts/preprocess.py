@@ -2,8 +2,9 @@ from pathlib import Path
 from PIL import Image
 from torchvision import transforms
 from tqdm import tqdm
+import typer
 
-from data_utils import get_train_paths
+from data_utils import get_image_paths
 
 class ImagePreprocessor:
     def __init__(self):
@@ -12,13 +13,14 @@ class ImagePreprocessor:
             # transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
     ])
 
-    def preprocess_images(self, train_paths: dict, target_path: Path):
-        self.create_directiories(train_paths, target_path)
+    def preprocess_images(self, images_path: Path, target_path: Path):
+        images_dict = get_image_paths(images_path)
+        self.create_directiories(images_dict, target_path)
 
-        for sample in tqdm(train_paths):
+        for sample in tqdm(images_dict):
             img = Image.open(sample["image"]).convert('RGB')
             img = self.transform(img)
-            new_image_path = target_path / sample['label'] / sample['image'].parts[-1]
+            new_image_path = target_path / str(sample['label']) / sample['image'].parts[-1]
             img.save(new_image_path)
 
     def create_directiories(self, train_paths: dict, target_path: Path):
@@ -28,12 +30,10 @@ class ImagePreprocessor:
 
         target_path.mkdir(exist_ok=True)
         for label_path in label_paths:
-            new_path = target_path / label_path
+            new_path = target_path / str(label_path)
             new_path.mkdir(exist_ok=True)
 
 
 if __name__ == "__main__":
-    paths = get_train_paths(Path("/home/lukasz/traffic_sign_recognition/data/train"))
-
     preprocessor = ImagePreprocessor()
-    preprocessor.preprocess_images(paths, target_path=Path("/home/lukasz/traffic_sign_recognition/data/preprocessed"))    
+    typer.run(preprocessor.preprocess_images) 
