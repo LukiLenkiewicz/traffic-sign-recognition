@@ -10,11 +10,12 @@ from model import CNN
 
 
 def main(data_path: Path):
+    wandb_logger = WandbLogger(project='traffic-sign-recognition', name=None)
+    checkpoint_callback = ModelCheckpoint(dirpath=Path.cwd() / "models", filename="best-model", save_top_k=1, monitor="val_accuracy", mode="max")
+
     model = CNN()
     cnn_module = CNNModule(model)
 
-    wandb_logger = WandbLogger(project='traffic-sign-recognition', name=None)
-    checkpoint_callback = ModelCheckpoint(dirpath=Path.cwd() / "models", filename="best-model", save_top_k=1, monitor="val_accuracy", mode="max")
     data_module = TrafficSignDataModule(data_dir=data_path)
 
     trainer = pl.Trainer(max_epochs=10, logger=wandb_logger, callbacks=[checkpoint_callback])
